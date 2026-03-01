@@ -75,15 +75,30 @@
   --selection: rgba(74, 222, 128, 0.3);
 }
 
+/* ── Coordinated theme transition ── */
+/* Applied only during the ~300 ms after a theme toggle so hover/focus */
+/* transitions on individual elements are not affected. */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease,
+    outline-color 300ms ease !important;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg); /* prevent overscroll flash on iOS/mobile */
   }
 
   body {
-    @apply bg-[var(--bg)] font-mono text-[var(--text)] transition-colors duration-300;
+    @apply bg-[var(--bg)] font-mono text-[var(--text)];
   }
 
   ::selection {

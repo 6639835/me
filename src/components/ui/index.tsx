@@ -16,10 +16,13 @@ export function Reveal({
   if (reduce) return <div className={className}>{children}</div>;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, margin: "-24px" }}
+      // Ignore the section-level delay here — applying large delays to
+      // whileInView means the element freezes for up to ~1 s after scrolling
+      // into view, which feels "stuck". A small uniform ease-out is snappier.
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -27,23 +30,34 @@ export function Reveal({
   );
 }
 
-export function TypedCommand({ text, delay = 0 }: { text: string; delay?: number }) {
+// Variants used by TypedCommand — one IntersectionObserver on the parent
+// triggers a stagger across all characters instead of one observer per char.
+const cmdContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.028, delayChildren: 0.05 } },
+};
+const cmdChar = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.01 } },
+};
+
+export function TypedCommand({ text }: { text: string }) {
   const reduce = useReducedMotion();
   if (reduce) return <span className="text-[var(--text-heading)]">{text}</span>;
   return (
-    <span className="text-[var(--text-heading)]">
+    <motion.span
+      className="text-[var(--text-heading)]"
+      variants={cmdContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+    >
       {text.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.02, delay: delay + i * 0.025 }}
-        >
+        <motion.span key={i} variants={cmdChar}>
           {char}
         </motion.span>
       ))}
-    </span>
+    </motion.span>
   );
 }
 
@@ -67,7 +81,7 @@ export function TermLine({
           <p className="flex items-center gap-0 font-mono text-sm">
             {dir && <span className="mr-1 text-[var(--blue)]">{dir}</span>}
             <span className="mr-2 text-[var(--green)]">{prompt}</span>
-            <TypedCommand text={command} delay={delay} />
+            <TypedCommand text={command} />
           </p>
         )}
         {children && (
@@ -83,7 +97,7 @@ export function SkillBar({ label, level }: { label: string; level: number }) {
   const empty = 10 - filled;
   return (
     <div className="flex items-center gap-3 text-xs">
-      <span className="w-20 shrink-0 truncate text-[var(--yellow)]">{label}</span>
+      <span className="w-20 shrink-0 truncate text-[var(--yellow)] sm:w-28">{label}</span>
       <span className="text-[var(--green)]">{"█".repeat(filled)}</span>
       <span className="text-[var(--text-dim)]">{"░".repeat(empty)}</span>
       <span className="w-8 text-right text-[var(--text-muted)]">{level}%</span>

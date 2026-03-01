@@ -33,7 +33,7 @@ export default function ResumePage() {
         {/* PDF Embed */}
         <TermLine command="open resume.pdf" delay={0.15}>
           <div className="mt-1 overflow-hidden rounded border border-[var(--border)]">
-            <div className="flex aspect-[8.5/11] items-center justify-center bg-[var(--bg-card)]">
+            <div className="flex aspect-[8.5/11] max-h-[75vh] items-center justify-center bg-[var(--bg-card)] sm:max-h-none">
               <object data={profile.resumeFile} type="application/pdf" className="h-full w-full">
                 <div className="p-8 text-center">
                   <p className="mb-4 text-sm text-[var(--text-muted)]">

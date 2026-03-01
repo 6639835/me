@@ -134,17 +134,14 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="mb-0.5 font-bold text-[var(--text-heading)]">OPTIONS</p>
-                <div className="space-y-1.5 pl-6">
+                <div className="space-y-2 pl-6">
                   {profile.highlights.map((h) => (
-                    <p key={h.label}>
-                      <span className="text-[var(--yellow)]">
+                    <div key={h.label} className="flex flex-col gap-0.5 sm:flex-row sm:gap-4">
+                      <span className="shrink-0 text-[var(--yellow)] sm:min-w-[14rem]">
                         --{h.label.toLowerCase().replace(/\s/g, "-")}
                       </span>
-                      <span className="text-[var(--text-muted)]">
-                        {" ".repeat(Math.max(1, 18 - h.label.length))}
-                      </span>
-                      {h.description}
-                    </p>
+                      <span>{h.description}</span>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -180,7 +177,7 @@ export default function HomePage() {
             <table className="w-full text-xs">
               <thead>
                 <tr className="text-[var(--text-muted)]">
-                  <td className="py-0.5 pr-3">permissions</td>
+                  <td className="hidden py-0.5 pr-3 sm:table-cell">permissions</td>
                   <td className="py-0.5 pr-3">size</td>
                   <td className="py-0.5 pr-3">modified</td>
                   <td className="py-0.5">name</td>
@@ -189,7 +186,7 @@ export default function HomePage() {
               <tbody>
                 {profile.projects.map((p) => (
                   <tr key={p.slug}>
-                    <td className="py-0.5 pr-3 text-[var(--text-muted)]">drwxr-xr-x</td>
+                    <td className="hidden py-0.5 pr-3 text-[var(--text-muted)] sm:table-cell">drwxr-xr-x</td>
                     <td className="py-0.5 pr-3 text-[var(--purple)]">{p.stack.length} deps</td>
                     <td className="py-0.5 pr-3 text-[var(--text-muted)]">
                       {p.period.split("—")[0].trim()}
